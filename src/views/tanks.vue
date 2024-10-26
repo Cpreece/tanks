@@ -1,45 +1,52 @@
-<script setup lang='ts'> 
-	import { ref } from 'vue'
-	import Player from '../services/player.ts'
+<script setup lang='ts'>
+  import { ref, watch, onMounted } from 'vue'
+  import Game from '../services/game.ts'
+  const game = ref(new Game())
+  const playing = ref(game.playing)
 
-	let playing:boolean = ref(true)
-	let player = new Player()
-	player.create;
-
-
-</script> 
+</script>
 
 <template>
-	<div>
-		<div v-if="playing" class="game"> 
-			<h1>Destroy the enemy tanks</h1>
-			<div class="map"> 	
-			</div>			
-		</div>
-		<div v-else class="menu">
-			<h1>This is a tank game</h1>
-			<button class="start-game" @click="playing = true">Start Game</button>
-		</div>
+	<div class="game">
+    <h1>{{game.playing ? 'Destroy the enemy tanks' : 'This is a tank game'}}</h1>
+		  <button v-if="!game.playing" class="start-game" @click="game.create">Start Game</button>
+      <div id="map" :class="{'active': game.playing}">
+	  </div>
 	</div>
 </template>
 
 <style lang="less">
-@media (min-width: 1024px) {
   .menu{
     min-height: 100vh;
     display: flex;
     align-items: center;
   }
 	.game {
-		width: 90vw;
-		height: 90vh; 
-		.map { 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+		width: 95vw;
+    max-width: 100%;
+		height: 90vh;
+    max-height:100%;
+    padding: 1rem;
+		#map {
+      content: '';
 			position: relative;
-			background-color: beige;
-			height: calc(100% - 50px);	
+			height: 100%;
 			width: 100%;
+      margin-top: 20px;
+      &.active {
+        background: beige;
+      }
+      #player {
+        height: 20px;
+        width: 20px;
+        position:absolute;
+        background-color: blue;
+        transition: all .1s ease;
+      }
 		}
-	}	
-}
+	}
 
 </style>
