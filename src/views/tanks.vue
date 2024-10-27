@@ -1,9 +1,12 @@
 <script setup lang='ts'>
-  import { ref, watch, onMounted } from 'vue'
+  import { ref, watch, onBeforeUnmount } from 'vue'
   import Game from '../services/game.ts'
   const game = ref(new Game())
   const playing = ref(game.playing)
 
+onBeforeUnmount(() => {
+    this.game.endGame()
+  });
 </script>
 
 <template>
@@ -45,8 +48,14 @@
         position:absolute;
         background-color: blue;
         transition: all .1s ease;
+        &::before{
+          position: absolute;
+          top: 10px;
+          left: 8px;
+          content: '';
+          width: 4px;
+          height: 18px;
+          background-color: red;
+        }
       }
-		}
-	}
-
-</style>
+		} } </style>

@@ -19,18 +19,58 @@ class Player {
 		playerAsset.style.left = `${xPlacement - playerWidth/2}px`;
 	}
 
-  move(xMove, yMove) {
+  pointTurret(posX, posY) {
+    const playerAsset = document.getElementById('player');
+    const turret = document.querySelector('#player::before');
+    console.log(`${posX}, ${posY} mousePosition`);
+    console.log(playerAsset.getBoundingClientRect());
+  }
+
+  move(event) {
+    const keyPressed = event.code;
+    let xMove = 0
+    let yMove = 0
+    switch (keyPressed) {
+      case 'ArrowLeft':
+        xMove = -20
+        break;
+      case 'ArrowRight':
+        xMove = 20
+        break;
+      case 'ArrowUp':
+        yMove = -20
+        break;
+      case 'ArrowDown':
+        yMove = 20
+        break;
+      default:
+        return
+    }
     const playerAsset = document.getElementById('player')
     const playerRect = playerAsset.getBoundingClientRect()
     const currentX = playerAsset.offsetLeft
     const currentY = playerAsset.offsetTop
     const playerHeight = playerRect.height
     const playerWidth = playerRect.width
-    console.log(currentX, playerWidth, xMove)
-    console.log(currentY, playerHeight, yMove)
-    playerAsset.style.left = `${currentX + xMove}px`
-    playerAsset.style.top = `${currentY + yMove}px`
+    let xPlacement = currentX + xMove
+    let yPlacement = currentY + yMove
+    const map = document.getElementById('map');
+    const mapRect = map.getBoundingClientRect();
+    if (yPlacement - playerHeight/2 < 0) {
+      yPlacement = 0
+    }
+      if (yPlacement + playerHeight > mapRect.height) {
+      yPlacement = mapRect.height - playerHeight
+    }
+    if (xPlacement - playerWidth/2 < 0) {
+      xPlacement = 0
+    }
+    if (xPlacement + playerWidth > mapRect.width) {
+      xPlacement = mapRect.width - playerWidth
+    }
+    playerAsset.style.top = `${yPlacement}px`
+    playerAsset.style.left = `${xPlacement}px`
   }
-}
 
+}
 export default Player
