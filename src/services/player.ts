@@ -52,9 +52,8 @@ class Player {
     // I'm thinking about instead just having a last fired delay
     // and make it so that you can't fire for 2 or 3 seconds
     const playerAsset = document.getElementById('player');
-    const playerRect = playerAsset.getBoundingClientRect();
-    const playerPosX = playerRect.offsetLeft
-    const playerPosY = playerRect.offsetTop
+    const playerPosX = playerAsset.offsetLeft
+    const playerPosY = playerAsset.offsetTop
     this.turretAngle = this.calcMouseToPlayerAngle(posX, posY)
     console.log(this.turretAngle)
     this.missles.fireTurret(this.turretAngle, playerPosX, playerPosY);

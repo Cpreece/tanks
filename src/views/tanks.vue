@@ -70,7 +70,7 @@ onBeforeUnmount(() => {
     .missle {
       height: 4px;
       width: 4px;
-      postition: absolute;
+      position: absolute;
       background-color: black;
     }
   }

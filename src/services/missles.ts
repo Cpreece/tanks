@@ -14,10 +14,11 @@ class Missles {
     const turret = document.querySelector('#player')
     const turretHeight = parseInt(window.getComputedStyle(turret, ':before').height.split('px')[0])
     console.log(Math.cos(turretAngle)/turretHeight)
+    console.log(`${xPlayerPos}, ${yPlayerPos} player position`)
     const missleX = xPlayerPos + Math.cos(turretAngle)/turretHeight
     const missleY = yPlayerPos + Math.sin(turretAngle)/turretHeight
     missle.style.left = missleX + 'px'
-    missle.style.left = missleY + 'px'
+    missle.style.top = missleY + 'px'
     console.log(`${missleX}, ${missleY} missle position`)
     map.appendChild(missle);
     this.missles.push(missle);
