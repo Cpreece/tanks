@@ -39,13 +39,14 @@ class Game {
   }
 
   handleMouseMove(event) {
-    // if(!this.playing) return
+     if(!this.playing) return
     const posX = event.clientX;
     const posY = event.clientY;
     this.player.pointTurret(posX, posY);
   }
 
   handleClick(event) {
+     if(!this.playing) return
     this.player.fireTurret(event.clientX, event.clientY)
   }
 

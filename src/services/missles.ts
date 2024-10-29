@@ -1,7 +1,7 @@
 class Missles {
-  missles:array
+  missles: array
 
-  constructor() { this.missles = [] }
+  constructor() {this.missles = []}
 
   fireTurret(turretAngle, xPlayerPos, yPlayerPos) {
     // calculate velocity
@@ -11,12 +11,12 @@ class Missles {
     const map = document.getElementById('map')
     const missle = document.createElement('div')
     missle.classList.add('missle')
+    const missleRect = missle.getBoundingClientRect();
     const turret = document.querySelector('#player')
-    const turretHeight = parseInt(window.getComputedStyle(turret, ':before').height.split('px')[0])
-    console.log(Math.cos(turretAngle)/turretHeight)
-    console.log(`${xPlayerPos}, ${yPlayerPos} player position`)
-    const missleX = xPlayerPos + Math.cos(turretAngle)/turretHeight
-    const missleY = yPlayerPos + Math.sin(turretAngle)/turretHeight
+    const turretWidth = parseInt(window.getComputedStyle(turret, ':before').width.split('px')[0])
+    console.log(missleRect)
+    const missleX = xPlayerPos + Math.cos(turretAngle) * (turretWidth)
+    const missleY = yPlayerPos + Math.sin(turretAngle) * (turretWidth)
     missle.style.left = missleX + 'px'
     missle.style.top = missleY + 'px'
     console.log(`${missleX}, ${missleY} missle position`)

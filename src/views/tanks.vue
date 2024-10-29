@@ -6,16 +6,19 @@ const game = ref(new Game())
 const playing = ref(game.playing)
 
 onBeforeUnmount(() => {
-  this.game.endGame()
-});
+  //:w:w<!--this.game.endGame()-->
+})
 </script>
 
 <template>
   <div class="game">
-    <h1>{{ game.playing ? 'Destroy the enemy tanks' : 'This is a tank game' }}</h1>
-    <button v-if="!game.playing" class="start-game" @click="game.create">Start Game</button>
-    <div id="map" :class="{ 'active': game.playing }">
-    </div>
+    <h1>
+      {{ game.playing ? 'Destroy the enemy tanks' : 'This is a tank game' }}
+    </h1>
+    <button v-if="!game.playing" class="start-game" @click="game.create">
+      Start Game
+    </button>
+    <div id="map" :class="{ active: game.playing }"></div>
   </div>
 </template>
 
@@ -52,16 +55,16 @@ onBeforeUnmount(() => {
       width: 20px;
       position: absolute;
       background-color: blue;
-      transition: all .1s ease;
+      transition: all 0.1s ease;
 
       &::before {
-        transform-origin: bottom;
+        transform-origin: left;
         position: absolute;
-        top: -8px;
-        left: 8px;
+        top: 8px;
+        left: 10px;
         content: '';
-        width: 4px;
-        height: 18px;
+        width: 18px;
+        height: 4px;
         background-color: red;
         transform: rotate(var(--turret-angle, 0deg));
       }

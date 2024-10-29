@@ -21,8 +21,8 @@ class Player {
     const playerRect = playerAsset.getBoundingClientRect();
     const playerWidth = playerRect.width;
     const playerHeight = playerRect.height
-		playerAsset.style.left = `${xPlacement - playerWidth/2}px`;
 		playerAsset.style.top = `${yPlacement - playerHeight/2}px`;
+		playerAsset.style.left = `${xPlacement - playerWidth/2}px`;
 	}
 
   calcMouseToPlayerAngle(posX, posY) {
@@ -36,7 +36,7 @@ class Player {
     const yDiff = Math.round(posY - playerY)
     const radians = Math.atan((yDiff*-1)/xDiff) * -1;
     let degrees = radians * 180 / Math.PI
-    const angle = degrees += xDiff >= 0 ? 0 : 180
+    const angle = degrees += xDiff >= 0 ? 90 : 270
       degrees += 90
     return angle
   }
@@ -56,7 +56,7 @@ class Player {
     const playerPosX = playerAsset.offsetLeft + playerRect.width/2
     const playerPosY = playerAsset.offsetTop + playerRect.height/2
     this.turretAngle = this.calcMouseToPlayerAngle(posX, posY)
-   const turretAngleRads = this.turretAngle*Math.PI/180
+   const turretAngleRads = this.turretAngle/Math.PIa*180
     this.missles.fireTurret(turretAngleRads, playerPosX, playerPosY);
   }
 
