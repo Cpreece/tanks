@@ -1,8 +1,8 @@
 import Player from './player'
 
 class Game {
-  playing:boolean
-  player:object
+  playing: boolean
+  player: object
 
   constructor() {
     this.playing = false
@@ -12,10 +12,6 @@ class Game {
     this.player = {};
   }
 
-  gameLoop() {
-    while(this.playing) {
-
-  }
   create() {
     if (this.playing === true) return
     this.playing = true
@@ -24,7 +20,7 @@ class Game {
     const mapHeight = mapRect.height
     const mapWidth = mapRect.width
     this.player = new Player()
-    this.player.create(mapWidth/2, mapHeight/2)
+    this.player.create(mapWidth / 2, mapHeight / 2)
 
     window.addEventListener('keydown', this.handleKeyPress);
     window.addEventListener('mousemove', this.handleMouseMove);
@@ -38,19 +34,19 @@ class Game {
   }
 
   handleKeyPress(event) {
-    if(!this.playing) return
+    if (!this.playing) return
     this.player.move(event)
   }
 
   handleMouseMove(event) {
-     if(!this.playing) return
+    if (!this.playing) return
     const posX = event.clientX;
     const posY = event.clientY;
     this.player.pointTurret(posX, posY);
   }
 
   handleClick(event) {
-     if(!this.playing) return
+    if (!this.playing) return
     this.player.fireTurret(event.clientX, event.clientY)
   }
 

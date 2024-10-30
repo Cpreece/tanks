@@ -1,7 +1,7 @@
 import Missles from './missles'
 
 class Player {
-	lives: number
+  lives: number
   lastMouseX: number
   lastMouseY: number
   reloading: number
@@ -17,40 +17,38 @@ class Player {
     this.lastMouseY = 0
   }
 
-	create(xPlacement:number = 0, yPlacement:number = 0) {
+  create(xPlacement: number = 0, yPlacement: number = 0) {
     const map = document.getElementById('map')
-	  let playerAsset = document.createElement("div")
-		playerAsset.id = "player"
+    let playerAsset = document.createElement("div")
+    playerAsset.id = "player"
     if (!map) return
-		map.appendChild(playerAsset)
+    map.appendChild(playerAsset)
     playerAsset = document.getElementById('player')
     const playerRect = playerAsset.getBoundingClientRect();
     const playerWidth = playerRect.width;
     const playerHeight = playerRect.height
-		playerAsset.style.left = `${xPlacement - playerWidth/2}px`;
-		playerAsset.style.top = `${yPlacement - playerHeight/2}px`;
-	}
+    playerAsset.style.left = `${xPlacement - playerWidth / 2}px`;
+    playerAsset.style.top = `${yPlacement - playerHeight / 2}px`;
+  }
 
   calcMouseToPlayerAngle(posX: number, posY: number) {
+
     this.lastMouseX = posX
     this.lastMouseY = posY
     const playerAsset = document.getElementById('player');
     const playerRect = playerAsset.getBoundingClientRect();
-    D:lfkjadslf;kj
-    
-    
-
-    const playerY = playerRect.top + playerRect.height/2;
+    const playerX = playerRect.left + playerRect.height / 2;
+    const playerY = playerRect.top + playerRect.height / 2;
     const xDiff = Math.round(posX - playerX)
     const yDiff = Math.round(posY - playerY)
-    const radians = Math.atan((yDiff*-1)/xDiff) * -1;
+    const radians = Math.atan((yDiff * -1) / xDiff) * -1;
     let degrees = radians * 180 / Math.PI
     const angle = degrees += xDiff >= 0 ? 0 : 180
-      degrees += 90
+    degrees += 90
     return angle
   }
 
-  pointTurret(posX:number, posY:number) {
+  pointTurret(posX: number, posY: number) {
     const playerAsset = document.getElementById('player');
     this.turretAngle = this.calcMouseToPlayerAngle(posX, posY)
     playerAsset.style.setProperty('--turret-angle', `${this.turretAngle}deg`)
@@ -62,10 +60,10 @@ class Player {
     // and make it so that you can't fire for 2 or 3 seconds
     const playerAsset = document.getElementById('player');
     const playerRect = playerAsset.getBoundingClientRect();
-    const playerPosX = playerAsset.offsetLeft + playerRect.width/2
-    const playerPosY = playerAsset.offsetTop + playerRect.height/2
+    const playerPosX = playerAsset.offsetLeft + playerRect.width / 2
+    const playerPosY = playerAsset.offsetTop + playerRect.height / 2
     this.turretAngle = this.calcMouseToPlayerAngle(posX, posY)
-    const turretAngleRads = this.turretAngle*Math.PI/180
+    const turretAngleRads = this.turretAngle * Math.PI / 180
     this.missles.fireTurret(turretAngleRads, playerPosX, playerPosY);
   }
 
@@ -99,13 +97,13 @@ class Player {
     let yPlacement = currentY + yMove
     const map = document.getElementById('map');
     const mapRect = map.getBoundingClientRect();
-    if (yPlacement - playerHeight/2 < 0) {
+    if (yPlacement - playerHeight / 2 < 0) {
       yPlacement = 0
     }
-      if (yPlacement + playerHeight > mapRect.height) {
+    if (yPlacement + playerHeight > mapRect.height) {
       yPlacement = mapRect.height - playerHeight
     }
-    if (xPlacement - playerWidth/2 < 0) {
+    if (xPlacement - playerWidth / 2 < 0) {
       xPlacement = 0
     }
     if (xPlacement + playerWidth > mapRect.width) {
