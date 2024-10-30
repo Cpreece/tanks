@@ -1,4 +1,4 @@
-import Player from './player.ts'
+import Player from './player'
 
 class Game {
   playing:boolean
@@ -12,6 +12,10 @@ class Game {
     this.player = {};
   }
 
+  gameLoop() {
+    while(this.playing) {
+
+  }
   create() {
     if (this.playing === true) return
     this.playing = true

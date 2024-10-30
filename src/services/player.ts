@@ -4,18 +4,24 @@ class Player {
 	lives: number
   lastMouseX: number
   lastMouseY: number
+  reloading: number
+  turretAngle: number
+  missles: object
 
   constructor() {
     this.lives = 3
     this.turretAngle = 0
     this.missles = new Missles
     this.reloading = 0
+    this.lastMouseX = 0
+    this.lastMouseY = 0
   }
 
 	create(xPlacement:number = 0, yPlacement:number = 0) {
-
+    const map = document.getElementById('map')
 	  let playerAsset = document.createElement("div")
 		playerAsset.id = "player"
+    if (!map) return
 		map.appendChild(playerAsset)
     playerAsset = document.getElementById('player')
     const playerRect = playerAsset.getBoundingClientRect();
@@ -25,12 +31,15 @@ class Player {
 		playerAsset.style.top = `${yPlacement - playerHeight/2}px`;
 	}
 
-  calcMouseToPlayerAngle(posX, posY) {
+  calcMouseToPlayerAngle(posX: number, posY: number) {
     this.lastMouseX = posX
     this.lastMouseY = posY
     const playerAsset = document.getElementById('player');
     const playerRect = playerAsset.getBoundingClientRect();
-    const playerX = playerRect.left + playerRect.width/2;
+    D:lfkjadslf;kj
+    
+    
+
     const playerY = playerRect.top + playerRect.height/2;
     const xDiff = Math.round(posX - playerX)
     const yDiff = Math.round(posY - playerY)
@@ -41,26 +50,26 @@ class Player {
     return angle
   }
 
-  pointTurret(posX, posY) {
+  pointTurret(posX:number, posY:number) {
     const playerAsset = document.getElementById('player');
     this.turretAngle = this.calcMouseToPlayerAngle(posX, posY)
     playerAsset.style.setProperty('--turret-angle', `${this.turretAngle}deg`)
   }
 
-  fireTurret(posX, posY) {
+  fireTurret(posX: number, posY: number) {
     // if (this.missles.length > 2) return
     // I'm thinking about instead just having a last fired delay
     // and make it so that you can't fire for 2 or 3 seconds
     const playerAsset = document.getElementById('player');
-      const playerRect = playerAsset.getBoundingClientRect();
+    const playerRect = playerAsset.getBoundingClientRect();
     const playerPosX = playerAsset.offsetLeft + playerRect.width/2
     const playerPosY = playerAsset.offsetTop + playerRect.height/2
     this.turretAngle = this.calcMouseToPlayerAngle(posX, posY)
-   const turretAngleRads = this.turretAngle*Math.PI/180
+    const turretAngleRads = this.turretAngle*Math.PI/180
     this.missles.fireTurret(turretAngleRads, playerPosX, playerPosY);
   }
 
-  move(event) {
+  move(event: Event) {
     const keyPressed = event.code;
     let xMove = 0
     let yMove = 0
