@@ -1,21 +1,6 @@
 class Missles {
-  missles: number[]
 
   constructor() {this.missles = []}
-
-  async moveMissle(missleId: number, missleX: number, missleY: number) {
-    const missle = document.getElementById(missleId)
-    for (let i = 0; i < 5; i++) {
-      setTimeout(() => {
-        const xVelocity = parseInt(missle.getAttribute('xVelocity'))
-        const yVelocity = parseInt(missle.getAttribute('yVelocity'))
-        missleX += xVelocity
-        missleY += yVelocity
-        missle.style.left = missleX + 'px'
-        missle.style.top = missleY + 'px'
-      }, 500)
-    }
-  }
 
   fireTurret(turretAngle: number, xPlayerPos: number, yPlayerPos: number) {
     // calculate velocity
@@ -37,8 +22,6 @@ class Missles {
     const missleId = this.missles.length
     missle.id = missleId
     map.appendChild(missle);
-    this.missles.push(missle);
-    this.moveMissle(missleId, missleX, missleY);
   }
 }
 

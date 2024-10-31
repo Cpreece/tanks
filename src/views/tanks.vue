@@ -15,7 +15,7 @@ onBeforeUnmount(() => {
     <h1>
       {{ game.playing ? 'Destroy the enemy tanks' : 'This is a tank game' }}
     </h1>
-    <button v-if="!game.playing" class="start-game" @click="game.create">
+    <button v-if="!game.playing" class="start-game" @click="game.startGame">
       Start Game
     </button>
     <div id="map" :class="{ active: game.playing }"></div>

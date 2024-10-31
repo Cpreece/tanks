@@ -12,7 +12,7 @@ class Game {
     this.player = {};
   }
 
-  create() {
+  startGame() {
     if (this.playing === true) return
     this.playing = true
     const map = document.getElementById('map');
@@ -21,10 +21,38 @@ class Game {
     const mapWidth = mapRect.width
     this.player = new Player()
     this.player.create(mapWidth / 2, mapHeight / 2)
-
     window.addEventListener('keydown', this.handleKeyPress);
     window.addEventListener('mousemove', this.handleMouseMove);
     window.addEventListener('click', this.handleClick);
+    this.moveMissle();
+  }
+
+  moveMissle() {
+    const missles = document.querySelectorAll('.missle')
+    try {
+      missles.forEach((missle) => {
+        const xVelocity = parseInt(missle.getAttribute('xVelocity'))
+        const yVelocity = parseInt(missle.getAttribute('yVelocity'))
+        let missleX = parseInt(window.getComputedStyle(missle).left.split('px')[0])
+        let missleY = parseInt(window.getComputedStyle(missle).top.split('px')[0]);
+        missleX += xVelocity * 10
+        missleY += yVelocity * 10
+        missle.style.left = missleX + 'px'
+        missle.style.top = missleY + 'px'
+        this.handleMissleCollision(missle, missleX, missleY);
+      })
+    } catch (error) {console.error(error)}
+    setTimeout(() => {
+      this.moveMissle()
+    }, 50)
+  }
+
+  handleMissleCollision(missle, missleX, missleY) {
+    const map = document.getElementById('map');
+    const mapRect = map.getBoundingClientRect();
+    if (missleX < 0) {
+      missle.remove()
+    }
   }
 
   endGame() {
