@@ -23,7 +23,9 @@ class Game {
     this.player.create(mapWidth / 2, mapHeight / 2)
     window.addEventListener('keydown', this.handleKeyPress);
     window.addEventListener('mousemove', this.handleMouseMove);
-    window.addEventListener('click', this.handleClick);
+    setTimeout(() => {
+      window.addEventListener('click', this.handleClick);
+    }, 100)
     this.moveMissle();
   }
 
@@ -35,8 +37,8 @@ class Game {
         const yVelocity = parseInt(missle.getAttribute('yVelocity'))
         let missleX = parseInt(window.getComputedStyle(missle).left.split('px')[0])
         let missleY = parseInt(window.getComputedStyle(missle).top.split('px')[0]);
-        missleX += xVelocity * 10
-        missleY += yVelocity * 10
+        missleX += xVelocity
+        missleY += yVelocity
         missle.style.left = missleX + 'px'
         missle.style.top = missleY + 'px'
         this.handleMissleCollision(missle, missleX, missleY);
@@ -50,10 +52,14 @@ class Game {
   handleMissleCollision(missle, missleX, missleY) {
     const map = document.getElementById('map');
     const mapRect = map.getBoundingClientRect();
-    if (missleX < 0) {
+    if (-10 > missleX || missleX > mapRect.width + 10) {
+      missle.remove()
+    }
+    if (-10 > missleY || missleY > mapRect.height + 10) {
       missle.remove()
     }
   }
+
 
   endGame() {
     window.removeEventListener('keydown', this.handleKeyPress);
