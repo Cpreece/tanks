@@ -50,13 +50,18 @@ onBeforeUnmount(() => {
       background: beige;
     }
 
-    #player {
+    .tank {
       height: 20px;
       width: 20px;
       position: absolute;
       background-color: blue;
       transition: all 0.1s ease;
-
+      &.enemy {
+        background-color: green;
+        &::before {
+          background-color: purple;
+        }
+      }
       &::before {
         transform-origin: left;
         position: absolute;

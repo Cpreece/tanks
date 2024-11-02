@@ -21,6 +21,7 @@ class Player {
     const map = document.getElementById('map')
     let playerAsset = document.createElement("div")
     playerAsset.id = "player"
+    playerAsset.classList.add('tank')
     if (!map) return
     map.appendChild(playerAsset)
     playerAsset = document.getElementById('player')
@@ -62,6 +63,7 @@ class Player {
     const playerRect = playerAsset.getBoundingClientRect();
     const playerPosX = playerAsset.offsetLeft + playerRect.width / 2
     const playerPosY = playerAsset.offsetTop + playerRect.height / 2
+    console.log(this.calcMouseToPlayerAngle(posX, posY))
     this.turretAngle = this.calcMouseToPlayerAngle(posX, posY)
     const turretAngleRads = this.turretAngle * Math.PI / 180
     this.missles.fireTurret(turretAngleRads, playerPosX, playerPosY);
