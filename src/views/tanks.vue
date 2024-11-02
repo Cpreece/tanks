@@ -4,10 +4,6 @@ import Game from '../services/game.ts'
 
 const game = ref(new Game())
 
-const minutes = ref()
-const seconds = ref()
-const tenthSeconds = ref(game.time % 6000)
-
 onBeforeUnmount(() => {
   this.game.endGame()
 })
@@ -36,6 +32,7 @@ onBeforeUnmount(() => {
       <h1>Destroy the enemy tanks</h1>
     </template>
     <div id="map" :class="{ active: game.playing }"></div>
+    <div class="game-recap-wrapper"><div class="game-recap"></div></div>
   </div>
 </template>
 
@@ -49,7 +46,21 @@ onBeforeUnmount(() => {
   height: 90vh;
   max-height: 100%;
   padding: 1rem;
-
+  .game-recap-wrapper {
+    position: absolute;
+    display: fixed;
+    width: 100vh;
+    height: 100vw;
+    background-color: #00000050;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .game-recap {
+      width: 300px;
+      background-color: #fff;
+      border-radius: 20px;
+    }
+  }
   .game-info {
     width: 100%;
     display: flex;
@@ -107,7 +118,7 @@ onBeforeUnmount(() => {
 
     .missle {
       height: 4px;
-      transition: all 0.025s linear;
+      transition: all 0 linear;
       width: 4px;
       position: absolute;
       background-color: black;
