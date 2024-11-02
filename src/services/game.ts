@@ -8,6 +8,7 @@ class Game {
   level: number
   tanksDestroyed: number
   enemyDelay: number
+  enemyActionDelay: number
   time: number
   showRecap: boolean
 
@@ -29,6 +30,7 @@ class Game {
     this.playing = true
     this.level = 0
     this.enemyDelay = 3000
+    this.enemyActionDelay = 750
     const map = document.getElementById('map');
     const mapRect = map.getBoundingClientRect();
     const mapHeight = mapRect.height
@@ -45,6 +47,9 @@ class Game {
     this.moveMissle();
     this.time = 0;
     this.tickClock();
+    setTimeout(() => {
+      this.actionEnemy();
+    }, 500)
   }
 
   moveMissle() {
@@ -112,7 +117,7 @@ class Game {
     ) {
       missle.remove()
       this.player.lives -= 1
-      if (this.player.lives = 0) {
+      if (this.player.lives === 0) {
         this.endGame()
       }
     }
@@ -129,6 +134,27 @@ class Game {
       }
       this.spawnEnemies()
     }, this.enemyDelay)
+  }
+
+  async actionEnemy() {
+    if (!this.playing) return
+    const enemies = document.querySelectorAll('.enemy')
+    enemies.forEach((enemy) => {
+      const moveX = (Math.random() - .5) * 40
+      const moveY = (Math.random() - .5) * 40
+      console.log(moveY)
+      const fireAttempt = Math.random() * 2
+      this.enemy.move(enemy, moveX, -moveY)
+      if (fireAttempt > 1) {
+        this.enemy.fireTurret(enemy)
+      }
+    })
+    if (this.enemyActionDelay > 250) {
+      this.enemyactionDelay -= 10
+    }
+    setTimeout(() => {
+      this.actionEnemy()
+    }, this.enemyActionDelay)
   }
 
   endGame() {
@@ -159,7 +185,6 @@ class Game {
   }
 
   async tickClock() {
-    console.log('tick')
     setTimeout(() => {
       if (this.player.lives === 0) {
         this.endGame()

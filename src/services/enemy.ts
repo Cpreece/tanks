@@ -10,7 +10,7 @@ class Enemy {
   constructor() {
     this.lives = 1
     this.turretAngle = 0
-    this.missles = new Missles
+    this.missle = new Missles
     this.reloading = 0
     this.id = 1
   }
@@ -32,6 +32,113 @@ class Enemy {
     enemyAsset.style.left = `${enemyX - enemyWidth / 2}px`
     enemyAsset.style.top = `${enemyY - enemyHeight / 2}px`
     this.id += 1
+  }
+
+  move(asset, moveX, moveY) {
+    const assetRect = asset.getBoundingClientRect();
+    const assetHeight = parseInt(assetRect.height)
+    const assetWidth = parseInt(assetRect.width)
+    const assetStyles = window.getComputedStyle(asset);
+    const currentX = parseInt(assetStyles.left.split('px')[0]);
+    moveX = currentX + moveX
+    const movePrimeX = moveX + assetWidth;
+    const currentY = parseInt(assetStyles.top.split('px')[0]);
+    moveY = currentY + moveY
+    const movePrimeY = moveY + assetHeight
+    //don't leave screen
+    const map = document.getElementById('map');
+    const mapRect = map.getBoundingClientRect();
+    if (moveY < 0) {
+      moveY = 0
+    }
+    if (moveY > mapRect.height - assetHeight) {
+      moveY = mapRect.height - assetHeight
+    }
+    if (moveX < 0) {
+      moveX = 0
+    }
+    if (moveX >= mapRect.width - assetWidth) {
+      moveX = mapRect.width - assetWidth
+    }
+    //// don't run over player
+    const player = document.getElementById('player')
+    const playerRect = player.getBoundingClientRect();
+    const playerStyles = window.getComputedStyle(player);
+    const playerWidth = parseInt(playerRect.width);
+    const playerHeight = parseInt(playerRect.height);
+    const playerMinX = parseInt(playerStyles.left.split('px')[0])
+    const playerMinY = parseInt(playerStyles.top.split('px')[0])
+    const playerMaxX = playerMinX + playerWidth
+    const playerMaxY = playerMinY + playerHeight
+    if (!(
+      moveX > playerMaxX ||
+      movePrimeX < playerMinX ||
+      moveY > playerMaxY ||
+      movePrimeY < playerMaxY
+    )) {
+      return
+    }
+    //// don't run over other enemy
+    const enemies = document.querySelectorAll('.enemy')
+    let isSafeMove = true
+    enemies.forEach((enemy) => {
+      if (asset.id = enemy.id) {
+        return
+      }
+      const enemyRect = enemy.getBoundingClientRect();
+      const enemyStyles = window.getComputedStyle(enemy);
+      const enemyWidth = parseInt(enemyRect.width);
+      const enemyHeight = parseInt(enemyRect.height);
+      const enemyMinX = parseInt(enemyStyles.left.split('px')[0])
+      const enemyMinY = parseInt(enemyStyles.top.split('px')[0])
+      const enemyMaxX = enemyMinX + enemyWidth
+      const enemyMaxY = enemyMinY + enemyHeight
+      if (!(
+        moveX > enemyMaxX ||
+        movePrimeX < enemyMinX ||
+        moveY > enemyMaxY ||
+        movePrimeY < enemyMaxY
+      )) {
+        isSafeMove = false
+      }
+    })
+    if (!isSafeMove) {
+      return
+    }
+    asset.style.left = moveX + 'px'
+    asset.style.top = moveY + 'px'
+  }
+
+  calcTurretAngle(asset) {
+    const playerAsset = document.getElementById('player');
+    const playerRect = playerAsset.getBoundingClientRect();
+    const playerX = playerRect.left + playerRect.height / 2;
+    const playerY = playerRect.top + playerRect.height / 2;
+    const assetRect = asset.getBoundingClientRect();
+    const assetX = assetRect.left + playerRect.height / 2;
+    const assetY = assetRect.top + playerRect.height / 2;
+    const xDiff = Math.round(assetX - playerX)
+    const yDiff = Math.round(assetY - playerY)
+    let radians = Math.atan((yDiff * -1) / xDiff) * -1;
+    if (assetX > playerX) {
+      radians += Math.PI
+    }
+    const degrees = radians * 180 / Math.PI + (Math.random() - .5) * 20
+    asset.style.setProperty('--turret-angle', `${degrees}deg`)
+    return {degrees: degrees, radians: radians}
+
+  }
+
+
+  fireTurret(asset) {
+    const turretAngle = this.calcTurretAngle(asset)
+    const assetStyles = window.getComputedStyle(asset);
+    const assetRect = asset.getBoundingClientRect();
+    const assetHeight = parseInt(assetRect.height);
+    const assetWidth = parseInt(assetRect.width);
+    const assetLeft = parseInt(assetStyles.left.split('px')[0]) + assetWidth / 2
+    const assetTop = parseInt(assetStyles.top.split('px')[0]) + assetHeight / 2
+    this.missle.fireTurret(turretAngle.radians, assetLeft, assetTop)
   }
 
   getSafeSpawnLocation(newEnemyAsset) {
