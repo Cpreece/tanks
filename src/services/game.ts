@@ -7,6 +7,7 @@ class Game {
   enemy: object
   level: number
   enemyDelay: number
+  time: number
 
   constructor() {
     this.playing = false
@@ -16,13 +17,14 @@ class Game {
     this.player = {};
     this.enemy = {};
     this.level = 0
+    this.time = 0
   }
 
   startGame() {
     if (this.playing === true) return
     this.playing = true
     this.level = 0
-    this.enemyDelay = 500
+    this.enemyDelay = 3000
     const map = document.getElementById('map');
     const mapRect = map.getBoundingClientRect();
     const mapHeight = mapRect.height
@@ -37,6 +39,8 @@ class Game {
       window.addEventListener('click', this.handleClick);
     }, 100)
     this.moveMissle();
+    this.time = 0;
+    this.tickClock();
   }
 
   moveMissle() {
@@ -121,6 +125,15 @@ class Game {
   handleClick(event) {
     if (!this.playing) return
     this.player.fireTurret(event.clientX, event.clientY)
+  }
+
+  tickClock() {
+    this.time += 1
+    setTimeout(() => {
+      if (this.playing) {
+        this.tickClock();
+      }
+    }, 100)
   }
 
 };

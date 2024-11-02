@@ -1,34 +1,45 @@
 <script setup lang='ts'>
 import { ref, watch, onBeforeUnmount } from 'vue'
 import Game from '../services/game.ts'
+
 const game = ref(new Game())
 
-const playing = ref(game.playing)
+const minutes = ref()
+const seconds = ref()
+const tenthSeconds = ref(game.time % 6000)
 
 onBeforeUnmount(() => {
-  //:w:w<!--this.game.endGame()-->
+  this.game.endGame()
 })
 </script>
 
 <template>
   <div class="game">
-    <h1>
-      {{ game.playing ? 'Destroy the enemy tanks' : 'This is a tank game' }}
-    </h1>
-    <button v-if="!game.playing" class="start-game" @click="game.startGame">
-      Start Game
-    </button>
+    <template v-if="!game.playing">
+      <h1>This is a tank game</h1>
+      <button class="start-game" @click="game.startGame">Start Game</button>
+    </template>
+    <template v-else>
+      <div class="game-info">
+        <div class="game-info-left">
+          <div class="lives">Lives: {{ game.player?.lives }}</div>
+          <div class="level">Level: {{ game.level }}</div>
+        </div>
+        <div class="game-info-right">
+          <span>{{ Math.floor(game.time / 600) }}</span
+          >m
+          <span
+            >{{ Math.floor((game.time % 600) / 10) }}.{{ game.time % 10 }}</span
+          >s
+        </div>
+      </div>
+      <h1>Destroy the enemy tanks</h1>
+    </template>
     <div id="map" :class="{ active: game.playing }"></div>
   </div>
 </template>
 
 <style lang="less">
-.menu {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-}
-
 .game {
   display: flex;
   flex-direction: column;
@@ -39,6 +50,25 @@ onBeforeUnmount(() => {
   max-height: 100%;
   padding: 1rem;
 
+  .game-info {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    &-left {
+      display: flex;
+      gap: 20px;
+      font-size: 20px;
+      font-weight: 600;
+    }
+    &-right {
+      span {
+        font-size: 20px;
+        font-weight: 600;
+        font-family: 'Space Mono';
+      }
+    }
+  }
   #map {
     content: '';
     position: relative;
