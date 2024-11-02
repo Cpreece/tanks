@@ -29,6 +29,7 @@ class Game {
     this.showRecap = false
     this.playing = true
     this.level = 0
+    this.tanksDestroyed = 0
     this.enemyDelay = 3000
     this.enemyActionDelay = 750
     const map = document.getElementById('map');
@@ -142,9 +143,8 @@ class Game {
     enemies.forEach((enemy) => {
       const moveX = (Math.random() - .5) * 40
       const moveY = (Math.random() - .5) * 40
-      console.log(moveY)
       const fireAttempt = Math.random() * 2
-      this.enemy.move(enemy, moveX, -moveY)
+      this.enemy.move(enemy, moveX, moveY)
       if (fireAttempt > 1) {
         this.enemy.fireTurret(enemy)
       }

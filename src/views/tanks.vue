@@ -4,6 +4,12 @@ import Game from '../services/game.ts'
 
 const game = ref(new Game())
 
+const user = ''
+
+function submitForm() {
+  console.log('submitted')
+}
+
 onBeforeUnmount(() => {
   this.game.endGame()
 })
@@ -32,7 +38,39 @@ onBeforeUnmount(() => {
       <h1>Destroy the enemy tanks</h1>
     </template>
     <div id="map" :class="{ active: game.playing }"></div>
-    <div class="game-recap-wrapper"><div class="game-recap"></div></div>
+    <div class="game-recap-wrapper">
+      <div class="game-recap">
+        <h2>Game Over</h2>
+        <div class="game-meta">
+          <div class="meta-row">
+            <div class="meta-item">Survived:</div>
+            <div class="meta-item">
+              <span>{{ Math.floor(game.time / 600) }}</span
+              >m
+              <span
+                >{{ Math.floor((game.time % 600) / 10) }}.{{
+                  game.time % 10
+                }}</span
+              >s
+            </div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-item">Tanks destroyed:</div>
+            <div class="meta-item">{{ game.tanksDestroyed }}</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-item">Level:</div>
+            <div class="meta-item">{{ game.level }}</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <form class="sumbit-record">
+            <input v-model="user" type="text" placeholder="name" />
+          </form>
+          <button @click="submitForm">Sumbit</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -48,17 +86,46 @@ onBeforeUnmount(() => {
   padding: 1rem;
   .game-recap-wrapper {
     position: absolute;
-    display: fixed;
-    width: 100vh;
-    height: 100vw;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
     background-color: #00000050;
     display: flex;
     justify-content: center;
     align-items: center;
     .game-recap {
-      width: 300px;
+      width: 320px;
+      padding: 40px 10px;
       background-color: #fff;
       border-radius: 20px;
+      h2 {
+        font-size: 30px;
+        font-weight: 600;
+        text-align: center;
+      }
+      .game-meta {
+        padding: 20px;
+        .meta-row {
+          display: flex;
+          gap: 20px;
+          .meta-item {
+            width: 50%;
+          }
+        }
+      }
+      .form-row {
+        width: 300px;
+        margin: 20px auto;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 5px;
+        button {
+          height: 22px;
+        }
+      }
     }
   }
   .game-info {
