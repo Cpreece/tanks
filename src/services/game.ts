@@ -9,6 +9,7 @@ class Game {
   tanksDestroyed: number
   enemyDelay: number
   time: number
+  showRecap: boolean
 
   constructor() {
     this.playing = false
@@ -19,10 +20,12 @@ class Game {
     this.enemy = {};
     this.level = 0
     this.time = 0
+    this.showRecap = false
   }
 
   startGame() {
     if (this.playing === true) return
+    this.showRecap = false
     this.playing = true
     this.level = 0
     this.enemyDelay = 3000
@@ -108,8 +111,8 @@ class Game {
       missleY < playerBottom
     ) {
       missle.remove()
-      this.lives -= 1
-      if (this.lives = 0) {
+      this.player.lives -= 1
+      if (this.player.lives = 0) {
         this.endGame()
       }
     }
@@ -117,6 +120,7 @@ class Game {
 
 
   spawnEnemies() {
+    if (!this.playing) return
     this.enemy.spawn();
     this.level += 1
     setTimeout(() => {
@@ -128,9 +132,13 @@ class Game {
   }
 
   endGame() {
+    const gameObjects = document.querySelectorAll('#map > div')
+    gameObjects.forEach((obj) => {obj.remove()})
     window.removeEventListener('keydown', this.handleKeyPress);
     window.removeEventListener('mousemove', this.handleMouseMove);
     window.removeEventListener('click', this.handleClick);
+    this.playing = false
+    this.showRecap = true
   }
 
   handleKeyPress(event) {
@@ -151,8 +159,10 @@ class Game {
   }
 
   tickClock() {
-    this.time += 1
     setTimeout(() => {
+      if (this.player.lives === 0) {
+        this.endGame()
+      }
       if (this.playing) {
         this.tickClock();
       }

@@ -1,4 +1,5 @@
 import Missles from './missles'
+import Game from './game'
 
 class Player {
   lives: number
@@ -7,12 +8,12 @@ class Player {
   reloading: number
   turretAngle: number
   missles: object
+  game: object
 
   constructor() {
     this.lives = 3
     this.turretAngle = 0
     this.missles = new Missles
-    this.reloading = 0
     this.lastMouseX = 0
     this.lastMouseY = 0
   }
@@ -63,7 +64,6 @@ class Player {
     const playerRect = playerAsset.getBoundingClientRect();
     const playerPosX = playerAsset.offsetLeft + playerRect.width / 2
     const playerPosY = playerAsset.offsetTop + playerRect.height / 2
-    console.log(this.calcMouseToPlayerAngle(posX, posY))
     this.turretAngle = this.calcMouseToPlayerAngle(posX, posY)
     const turretAngleRads = this.turretAngle * Math.PI / 180
     this.missles.fireTurret(turretAngleRads, playerPosX, playerPosY);
@@ -117,6 +117,35 @@ class Player {
       this.pointTurret(this.lastMouseX, this.lastMouseY);
     }
 
+    // handle collision with enemies
+    const playerLeft = xPlacement - playerRect.width / 2
+    const playerRight = xPlacement + playerRect.width / 2
+    const playerTop = yPlacement - playerRect.height / 2
+    const playerBottom = yPlacement + playerRect.height / 2
+    const enemies = document.querySelectorAll('.enemy')
+    enemies.forEach((enemy) => {
+      const enemyRect = enemy.getBoundingClientRect();
+      const enemyStyles = window.getComputedStyle(enemy)
+      const enemyLeft = parseInt(enemyStyles.left.split('px')[0]) - 5
+      const enemyTop = parseInt(enemyStyles.top.split('px')[0]) - 5
+      const enemyRight = enemyLeft + parseInt(enemyRect.width) + 10
+      const enemyBottom = enemyTop + parseInt(enemyRect.height) + 10
+      const playerLeftOfEnemy = playerRight < enemyLeft
+      const playerRightOfEnemy = playerLeft > enemyRight
+      const playerTopOfEnemy = playerBottom < enemyTop
+      const playerBottomOfEnemy = playerTop > enemyBottom
+      if (!(
+        playerLeftOfEnemy ||
+        playerRightOfEnemy ||
+        playerTopOfEnemy ||
+        playerBottomOfEnemy
+      )) {
+        console.log('crash')
+        enemy.remove()
+        this.lives -= 1
+      }
+
+    })
   }
 
 }
