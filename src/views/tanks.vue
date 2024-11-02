@@ -107,7 +107,7 @@ onBeforeUnmount(() => {
 
     .missle {
       height: 4px;
-      transition: all 0.05s linear;
+      transition: all 0.025s linear;
       width: 4px;
       position: absolute;
       background-color: black;

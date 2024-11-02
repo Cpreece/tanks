@@ -6,6 +6,7 @@ class Game {
   player: object
   enemy: object
   level: number
+  tanksDestroyed: number
   enemyDelay: number
   time: number
 
@@ -51,8 +52,8 @@ class Game {
         const yVelocity = parseInt(missle.getAttribute('yVelocity'))
         let missleX = parseInt(window.getComputedStyle(missle).left.split('px')[0])
         let missleY = parseInt(window.getComputedStyle(missle).top.split('px')[0]);
-        missleX += xVelocity
-        missleY += yVelocity
+        missleX += xVelocity / 2
+        missleY += yVelocity / 2
         missle.style.left = missleX + 'px'
         missle.style.top = missleY + 'px'
         this.handleMissleCollision(missle, missleX, missleY);
@@ -60,7 +61,7 @@ class Game {
     } catch (error) {console.error(error)}
     setTimeout(() => {
       this.moveMissle()
-    }, 50)
+    }, 25)
   }
 
   handleMissleCollision(missle, missleX, missleY) {
@@ -77,10 +78,10 @@ class Game {
     for (const enemy of enemies) {
       const enemyRect = enemy.getBoundingClientRect();
       const enemyStyles = window.getComputedStyle(enemy)
-      const enemyLeft = parseInt(enemyStyles.left.split('px')[0])
-      const enemyTop = parseInt(enemyStyles.top.split('px')[0])
-      const enemyRight = enemyLeft + parseInt(enemyRect.width)
-      const enemyBottom = enemyTop + parseInt(enemyRect.height)
+      const enemyLeft = parseInt(enemyStyles.left.split('px')[0]) - 5
+      const enemyTop = parseInt(enemyStyles.top.split('px')[0]) - 5
+      const enemyRight = enemyLeft + parseInt(enemyRect.width) + 10
+      const enemyBottom = enemyTop + parseInt(enemyRect.height) + 10
       if (
         missleX > enemyLeft &&
         missleX < enemyRight &&
@@ -89,10 +90,32 @@ class Game {
       ) {
         missle.remove()
         enemy.remove()
+        this.tanksDestroyed += 1
       }
-
+    }
+    // handle player hit
+    const player = document.getElementById('player')
+    const playerRect = player.getBoundingClientRect();
+    const playerStyles = window.getComputedStyle(player)
+    const playerLeft = parseInt(playerStyles.left.split('px')[0])
+    const playerTop = parseInt(playerStyles.top.split('px')[0])
+    const playerRight = playerLeft + parseInt(playerRect.width)
+    const playerBottom = playerTop + parseInt(playerRect.height)
+    if (
+      missleX > playerLeft &&
+      missleX < playerRight &&
+      missleY > playerTop &&
+      missleY < playerBottom
+    ) {
+      missle.remove()
+      this.lives -= 1
+      if (this.lives = 0) {
+        this.endGame()
+      }
     }
   }
+
+
   spawnEnemies() {
     this.enemy.spawn();
     this.level += 1

@@ -38,12 +38,7 @@ class Enemy {
     let is_safe = false;
     const map = document.getElementById('map');
     const mapRect = map.getBoundingClientRect();
-    const player = document.getElementById('player');
-    const playerRect = window.getComputedStyle(player);
-    const playerX = playerRect.left.split('px')[0] + parseInt(playerRect.width) / 2;
-    const playerY = playerRect.top.split('px')[0] + parseInt(playerRect.width) / 2;
     const newEnemyRect = newEnemyAsset.getBoundingClientRect();
-    const enemies = document.querySelectorAll('.enemy')
     let safeX
     let safeY
     while (!is_safe) {
@@ -58,6 +53,11 @@ class Enemy {
         continue
       }
       // check if too close to player
+      const player = document.getElementById('player');
+      const playerRect = window.getComputedStyle(player);
+      const playerX = parseInt(playerRect.left.split('px')[0]) + parseInt(playerRect.width) / 2;
+      const playerY = parseInt(playerRect.top.split('px')[0]) + parseInt(playerRect.width) / 2;
+      const enemies = document.querySelectorAll('.enemy')
       const playerDist = this.getObjectDistance(safeX, safeY, playerX, playerY)
       if (playerDist < 100) {continue}
 
