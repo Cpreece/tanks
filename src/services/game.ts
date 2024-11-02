@@ -158,12 +158,14 @@ class Game {
     this.player.fireTurret(event.clientX, event.clientY)
   }
 
-  tickClock() {
+  async tickClock() {
+    console.log('tick')
     setTimeout(() => {
       if (this.player.lives === 0) {
         this.endGame()
       }
       if (this.playing) {
+        this.time += 1
         this.tickClock();
       }
     }, 100)

@@ -140,7 +140,6 @@ class Player {
         playerTopOfEnemy ||
         playerBottomOfEnemy
       )) {
-        console.log('crash')
         enemy.remove()
         this.lives -= 1
       }
