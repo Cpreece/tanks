@@ -19,7 +19,8 @@
     "pinia": "^2.2.4",
     "vls": "^0.8.5",
     "vue": "^3.5.12",
-    "vue-router": "^4.4.5"
+    "vue-router": "^4.4.5",
+    "vue-sanitize": "^0.2.3"
   },
   "devDependencies": {
     "@playwright/test": "^1.48.0",

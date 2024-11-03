@@ -119,11 +119,11 @@ class Enemy {
     const assetY = assetRect.top + playerRect.height / 2;
     const xDiff = Math.round(assetX - playerX)
     const yDiff = Math.round(assetY - playerY)
-    let radians = Math.atan((yDiff * -1) / xDiff) * -1;
+    let radians = Math.atan((yDiff * -1) / xDiff) * -1
     if (assetX > playerX) {
       radians += Math.PI
     }
-    const degrees = radians * 180 / Math.PI + (Math.random() - .5) * 20
+    const degrees = radians * 180 / Math.PI
     asset.style.setProperty('--turret-angle', `${degrees}deg`)
     return {degrees: degrees, radians: radians}
 

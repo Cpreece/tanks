@@ -11,6 +11,7 @@ class Game {
   enemyActionDelay: number
   time: number
   showRecap: boolean
+  misslesFired: number
 
   constructor() {
     this.playing = false
@@ -21,7 +22,9 @@ class Game {
     this.enemy = {};
     this.level = 0
     this.time = 0
-    this.showRecap = false
+    this.misslesFired = 0
+    this.tanksDestroyed = 0
+    this.showRecap = true
   }
 
   startGame() {
@@ -30,6 +33,7 @@ class Game {
     this.playing = true
     this.level = 0
     this.tanksDestroyed = 0
+    this.misslesFired = 0
     this.enemyDelay = 3000
     this.enemyActionDelay = 750
     const map = document.getElementById('map');
@@ -54,6 +58,7 @@ class Game {
   }
 
   moveMissle() {
+    if (!this.playing) return
     const missles = document.querySelectorAll('.missle')
     try {
       missles.forEach((missle) => {
@@ -182,6 +187,7 @@ class Game {
   handleClick(event) {
     if (!this.playing) return
     this.player.fireTurret(event.clientX, event.clientY)
+    this.bulletsFired += 1
   }
 
   async tickClock() {

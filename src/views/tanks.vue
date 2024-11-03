@@ -1,13 +1,28 @@
 <script setup lang='ts'>
 import { ref, watch, onBeforeUnmount } from 'vue'
 import Game from '../services/game.ts'
+import VueSanitize from 'vue-sanitize'
 
-const game = ref(new Game())
+Vue.use(VueSanitize)
 
-const user = ''
+const game: object = ref(new Game())
+
+const user = ref('')
+const submitError = ref()
+const loading = ref(false)
 
 function submitForm() {
-  console.log('submitted')
+  user.value = this.$sanitize(user.value)
+  submitError.value = ''
+  if (user.value.length > 20) {
+    submitError.value = 'Max user length = 20'
+    return
+  }
+  if (user.value === '') {
+    submitError.value = 'Must set user'
+    return
+  }
+  // submit form
 }
 
 onBeforeUnmount(() => {
@@ -38,7 +53,7 @@ onBeforeUnmount(() => {
       <h1>Destroy the enemy tanks</h1>
     </template>
     <div id="map" :class="{ active: game.playing }"></div>
-    <div class="game-recap-wrapper">
+    <div v-if="game.showRecap" class="game-recap-wrapper">
       <div class="game-recap">
         <h2>Game Over</h2>
         <div class="game-meta">
@@ -62,13 +77,20 @@ onBeforeUnmount(() => {
             <div class="meta-item">Level:</div>
             <div class="meta-item">{{ game.level }}</div>
           </div>
+          <div class="meta-row">
+            <div class="meta-item">Missles fired:</div>
+            <div class="meta-item">{{ game.misslesFired }}</div>
+          </div>
         </div>
         <div class="form-row">
           <form class="sumbit-record">
             <input v-model="user" type="text" placeholder="name" />
           </form>
-          <button @click="submitForm">Sumbit</button>
+          <button @click.prevent="submitForm">Submit</button>
         </div>
+        <div class="error">{{ submitError }}</div>
+        <button class="play-again" @click="game.startGame">Play Again</button>
+        <a class="high-scores" href="/highscores">See High Scores</a>
       </div>
     </div>
   </div>
@@ -95,6 +117,10 @@ onBeforeUnmount(() => {
     justify-content: center;
     align-items: center;
     .game-recap {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: black;
       width: 320px;
       padding: 40px 10px;
       background-color: #fff;
@@ -125,6 +151,18 @@ onBeforeUnmount(() => {
         button {
           height: 22px;
         }
+      }
+      .error {
+        color: red;
+        text-align: center;
+      }
+      .play-again {
+        text-align: center;
+        width: 80px;
+        margin: 20px auto;
+      }
+      .high-scores {
+        text-align: center;
       }
     }
   }
