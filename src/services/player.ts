@@ -1,5 +1,4 @@
-import Missles from './missles'
-import Game from './game'
+import Missiles from './missiles'
 
 class Player {
   lives: number
@@ -7,13 +6,12 @@ class Player {
   lastMouseY: number
   reloading: number
   turretAngle: number
-  missles: object
-  game: object
+  missiles: object
 
   constructor() {
     this.lives = 3
     this.turretAngle = 0
-    this.missles = new Missles
+    this.missiles = new Missiles
     this.lastMouseX = 0
     this.lastMouseY = 0
   }
@@ -34,7 +32,6 @@ class Player {
   }
 
   calcMouseToPlayerAngle(posX: number, posY: number) {
-
     this.lastMouseX = posX
     this.lastMouseY = posY
     const playerAsset = document.getElementById('player');
@@ -57,7 +54,7 @@ class Player {
   }
 
   fireTurret(posX: number, posY: number) {
-    // if (this.missles.length > 2) return
+    // if (this.missiles.length > 2) return
     // I'm thinking about instead just having a last fired delay
     // and make it so that you can't fire for 2 or 3 seconds
     const playerAsset = document.getElementById('player');
@@ -66,7 +63,7 @@ class Player {
     const playerPosY = playerAsset.offsetTop + playerRect.height / 2
     this.turretAngle = this.calcMouseToPlayerAngle(posX, posY)
     const turretAngleRads = this.turretAngle * Math.PI / 180
-    this.missles.fireTurret(turretAngleRads, playerPosX, playerPosY);
+    this.missiles.fireTurret(turretAngleRads, playerPosX, playerPosY);
   }
 
   move(event: Event) {

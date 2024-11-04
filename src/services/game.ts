@@ -11,7 +11,7 @@ class Game {
   enemyActionDelay: number
   time: number
   showRecap: boolean
-  misslesFired: number
+  missilesFired: number
 
   constructor() {
     this.playing = false
@@ -22,9 +22,9 @@ class Game {
     this.enemy = {};
     this.level = 0
     this.time = 0
-    this.misslesFired = 0
+    this.missilesFired = 0
     this.tanksDestroyed = 0
-    this.showRecap = true
+    this.showRecap = false
   }
 
   startGame() {
@@ -33,7 +33,7 @@ class Game {
     this.playing = true
     this.level = 0
     this.tanksDestroyed = 0
-    this.misslesFired = 0
+    this.missilesFired = 0
     this.enemyDelay = 3000
     this.enemyActionDelay = 750
     const map = document.getElementById('map');
@@ -49,7 +49,7 @@ class Game {
     setTimeout(() => {
       window.addEventListener('click', this.handleClick);
     }, 100)
-    this.moveMissle();
+    this.moveMissile();
     this.time = 0;
     this.tickClock();
     setTimeout(() => {
@@ -57,35 +57,35 @@ class Game {
     }, 500)
   }
 
-  moveMissle() {
+  moveMissile() {
     if (!this.playing) return
-    const missles = document.querySelectorAll('.missle')
+    const missiles = document.querySelectorAll('.missile')
     try {
-      missles.forEach((missle) => {
-        const xVelocity = parseInt(missle.getAttribute('xVelocity'))
-        const yVelocity = parseInt(missle.getAttribute('yVelocity'))
-        let missleX = parseInt(window.getComputedStyle(missle).left.split('px')[0])
-        let missleY = parseInt(window.getComputedStyle(missle).top.split('px')[0]);
-        missleX += xVelocity / 2
-        missleY += yVelocity / 2
-        missle.style.left = missleX + 'px'
-        missle.style.top = missleY + 'px'
-        this.handleMissleCollision(missle, missleX, missleY);
+      missiles.forEach((missile) => {
+        const xVelocity = parseInt(missile.getAttribute('xVelocity'))
+        const yVelocity = parseInt(missile.getAttribute('yVelocity'))
+        let missileX = parseInt(window.getComputedStyle(missile).left.split('px')[0])
+        let missileY = parseInt(window.getComputedStyle(missile).top.split('px')[0]);
+        missileX += xVelocity / 2
+        missileY += yVelocity / 2
+        missile.style.left = missileX + 'px'
+        missile.style.top = missileY + 'px'
+        this.handleMissileCollision(missile, missileX, missileY);
       })
     } catch (error) {console.error(error)}
     setTimeout(() => {
-      this.moveMissle()
+      this.moveMissile()
     }, 25)
   }
 
-  handleMissleCollision(missle, missleX, missleY) {
+  handleMissileCollision(missile, missileX, missileY) {
     const map = document.getElementById('map');
     const mapRect = map.getBoundingClientRect();
-    if (-10 > missleX || missleX > mapRect.width + 10) {
-      missle.remove()
+    if (-10 > missileX || missileX > mapRect.width + 10) {
+      missile.remove()
     }
-    if (-10 > missleY || missleY > mapRect.height + 10) {
-      missle.remove()
+    if (-10 > missileY || missileY > mapRect.height + 10) {
+      missile.remove()
     }
     // handle enemy hit
     const enemies = document.querySelectorAll('.enemy');
@@ -97,12 +97,12 @@ class Game {
       const enemyRight = enemyLeft + parseInt(enemyRect.width) + 10
       const enemyBottom = enemyTop + parseInt(enemyRect.height) + 10
       if (
-        missleX > enemyLeft &&
-        missleX < enemyRight &&
-        missleY > enemyTop &&
-        missleY < enemyBottom
+        missileX > enemyLeft &&
+        missileX < enemyRight &&
+        missileY > enemyTop &&
+        missileY < enemyBottom
       ) {
-        missle.remove()
+        missile.remove()
         enemy.remove()
         this.tanksDestroyed += 1
       }
@@ -116,12 +116,12 @@ class Game {
     const playerRight = playerLeft + parseInt(playerRect.width)
     const playerBottom = playerTop + parseInt(playerRect.height)
     if (
-      missleX > playerLeft &&
-      missleX < playerRight &&
-      missleY > playerTop &&
-      missleY < playerBottom
+      missileX > playerLeft &&
+      missileX < playerRight &&
+      missileY > playerTop &&
+      missileY < playerBottom
     ) {
-      missle.remove()
+      missile.remove()
       this.player.lives -= 1
       if (this.player.lives === 0) {
         this.endGame()
@@ -187,7 +187,7 @@ class Game {
   handleClick(event) {
     if (!this.playing) return
     this.player.fireTurret(event.clientX, event.clientY)
-    this.bulletsFired += 1
+    this.missilesFired += 1
   }
 
   async tickClock() {

@@ -1,32 +1,61 @@
 <script setup lang='ts'>
-import { ref, watch, onBeforeUnmount } from 'vue'
-import Game from '../services/game.ts'
-import VueSanitize from 'vue-sanitize'
-
-Vue.use(VueSanitize)
+import { ref, onBeforeUnmount } from 'vue'
+import Game from '../services/game'
+import Scores from '../services/apiCalls'
 
 const game: object = ref(new Game())
 
 const user = ref('')
-const submitError = ref()
+const submitError = ref('')
 const loading = ref(false)
+const savedScore = ref(false)
+
+function startGame() {
+  savedScore.value = false
+  game.value.startGame()
+}
 
 function submitForm() {
-  user.value = this.$sanitize(user.value)
-  submitError.value = ''
-  if (user.value.length > 20) {
-    submitError.value = 'Max user length = 20'
-    return
+  try {
+    if (loading.value === true) return
+    loading.value = true
+    submitError.value = ''
+    if (user.value.length > 20) {
+      submitError.value = 'Max user length = 20'
+      loading.value = false
+      return
+    }
+    if (user.value === '') {
+      submitError.value = 'Must set user'
+      loading.value = false
+      return
+    }
+    const formData = {
+      user: user.value,
+      level: game.value.level,
+      seconds_survived: game.value.time,
+      missiles_fired: game.value.missilesFired,
+      tanks_destroyed: game.value.tanksDestroyed,
+    }
+    Scores.post(formData)
+      .then((res) => {
+        if (res.statusCode !== 200) {
+          Error(`Server Returned ${res.code}`)
+        }
+        loading.value = false
+        savedScore.value = true
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+  } catch (err) {
+    console.error(err)
+    loading.value = false
   }
-  if (user.value === '') {
-    submitError.value = 'Must set user'
-    return
-  }
-  // submit form
 }
 
 onBeforeUnmount(() => {
-  this.game.endGame()
+  game.endGame()
 })
 </script>
 
@@ -34,7 +63,7 @@ onBeforeUnmount(() => {
   <div class="game">
     <template v-if="!game.playing">
       <h1>This is a tank game</h1>
-      <button class="start-game" @click="game.startGame">Start Game</button>
+      <button class="start-game" @click="startGame">Start Game</button>
     </template>
     <template v-else>
       <div class="game-info">
@@ -78,18 +107,20 @@ onBeforeUnmount(() => {
             <div class="meta-item">{{ game.level }}</div>
           </div>
           <div class="meta-row">
-            <div class="meta-item">Missles fired:</div>
-            <div class="meta-item">{{ game.misslesFired }}</div>
+            <div class="meta-item">Missiles fired:</div>
+            <div class="meta-item">{{ game.missilesFired }}</div>
           </div>
         </div>
-        <div class="form-row">
-          <form class="sumbit-record">
+        <div v-if="!savedScore" class="form-row">
+          <form @submit.prevent="submitForm" class="sumbit-record">
             <input v-model="user" type="text" placeholder="name" />
           </form>
-          <button @click.prevent="submitForm">Submit</button>
+          <button @click.prevent="submitForm" type="submit">Submit</button>
         </div>
         <div class="error">{{ submitError }}</div>
-        <button class="play-again" @click="game.startGame">Play Again</button>
+        <button class="play-again" @click.prevent="startGame">
+          Play Again
+        </button>
         <a class="high-scores" href="/highscores">See High Scores</a>
       </div>
     </div>
@@ -221,7 +252,7 @@ onBeforeUnmount(() => {
       }
     }
 
-    .missle {
+    .missile {
       height: 4px;
       transition: all 0 linear;
       width: 4px;

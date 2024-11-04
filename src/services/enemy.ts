@@ -1,16 +1,16 @@
-import Missles from './missles'
+import Missiles from './missiles'
 
 class Enemy {
   lives: number
   reloading: number
   turretAngle: number
-  missles: object
+  missiles: object
   id: number
 
   constructor() {
     this.lives = 1
     this.turretAngle = 0
-    this.missle = new Missles
+    this.missile = new Missiles
     this.reloading = 0
     this.id = 1
   }
@@ -138,7 +138,7 @@ class Enemy {
     const assetWidth = parseInt(assetRect.width);
     const assetLeft = parseInt(assetStyles.left.split('px')[0]) + assetWidth / 2
     const assetTop = parseInt(assetStyles.top.split('px')[0]) + assetHeight / 2
-    this.missle.fireTurret(turretAngle.radians, assetLeft, assetTop)
+    this.missile.fireTurret(turretAngle.radians, assetLeft, assetTop)
   }
 
   getSafeSpawnLocation(newEnemyAsset) {
@@ -183,19 +183,19 @@ class Enemy {
       if (!passedEnemyCheck) {
         continue
       }
-      const missles = document.querySelectorAll('.missle')
-      let passedMissleCheck = true
-      for (const missle of missles) {
-        const missleStyle = window.getComputedStyle(missle);
-        const missleRect = missle.getBoundingClientRect();
-        const missleX = parseInt(missleStyle.left.split('px')[0]) - missleRect.width / 2;
-        const missleY = parseInt(missleStyle.top.split('px')[0]) - missleRect.height / 2;
-        const missleDist = this.getObjectDistance(safeX, safeY, missleX, missleY)
-        if (missleDist < 30) {
-          passedMissleCheck = false
+      const missiles = document.querySelectorAll('.missile')
+      let passedMissileCheck = true
+      for (const missile of missiles) {
+        const missileStyle = window.getComputedStyle(missile);
+        const missileRect = missile.getBoundingClientRect();
+        const missileX = parseInt(missileStyle.left.split('px')[0]) - missileRect.width / 2;
+        const missileY = parseInt(missileStyle.top.split('px')[0]) - missileRect.height / 2;
+        const missileDist = this.getObjectDistance(safeX, safeY, missileX, missileY)
+        if (missileDist < 30) {
+          passedMissileCheck = false
         }
       }
-      if (!passedMissleCheck) {continue}
+      if (!passedMissileCheck) {continue}
       is_safe = true
     }
     return {
