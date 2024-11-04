@@ -9,7 +9,6 @@ function getScores(order: string = 'level') {
   Scores.get(`-${order}`)
     .then((resp) => {
       tableData.value = resp
-      console.log(tableData.value)
     })
     .catch((err) => {
       console.error('Error getting scores ' + err)
@@ -17,31 +16,38 @@ function getScores(order: string = 'level') {
 }
 
 onBeforeMount(() => {
-  //getScores()
+  getScores()
 })
 </script>
 
 <template>
-  <div>
-    <h1>HighScores</h1>
+  <div class="highscores">
+    <h1>High Scores</h1>
     <div class="sort">
       <div class="subheader">Order by</div>
-      <select v-model="order" id="order">
-        <option value="level">Level</option>
-        <option value="seconds_survived">Seconds Survived</option>
-        <option value="tanks_destroyed">Tanks Destroyed</option>
-        <option value="missiles_fired">Missiles Fired</option>
-      </select>
-      <button @click="getScores(`-{order}`)">Go</button>
+      <form>
+        <select v-model="order" id="order">
+          <option value="level">Level</option>
+          <option value="seconds_survived">Seconds Survived</option>
+          <option value="tanks_destroyed">Tanks Destroyed</option>
+          <option value="missiles_fired">Missiles Fired</option>
+        </select>
+        <button @click.prevent="getScores(order)">Go</button>
+      </form>
     </div>
     <div class="scores">
       <table>
         <thead>
-          <th v-for="key in Object.keys(tableData[0])" :key="key">{{ key }}</th>
+          <tr>
+            <th key="index"></th>
+            <th v-for="key in Object.keys(tableData[0])" :key="key">
+              {{ key.replace('_', ' ') }}
+            </th>
+          </tr>
         </thead>
         <tbody>
           <tr v-for="(row, index) in tableData" :key="index">
-            <!--<td v-for"(index, value, key) in row)" :key="index">{{value}}</td>-->
+            <td key="index">{{ index + 1 }}</td>
             <td key="user">{{ row['user'] }}</td>
             <td key="level">{{ row['level'] }}</td>
             <td key="seconds_survived">{{ row['seconds_survived'] }}</td>
@@ -54,5 +60,56 @@ onBeforeMount(() => {
   </div>
 </template>
 
-<style>
+<style lang='less'>
+.highscores {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .sort {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    form {
+      display: flex;
+      align-items: center;
+      select {
+        height: 21px;
+      }
+      button {
+        height: 21px;
+      }
+    }
+  }
+  .scores {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    width: 100vw;
+    max-width: 700px;
+    background: #00000020;
+    @media (prefers-color-scheme: dark) {
+      background: #ffffff20;
+    }
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    thead {
+      text-align: center;
+      font-size: 20px;
+      th {
+        font-weight: 600;
+        text-transform: capitalize;
+      }
+    }
+    tbody {
+      text-align: center;
+      td {
+        border: 1px solid gray;
+        font-size: 18px;
+        padding: 0 3px;
+      }
+    }
+  }
+}
 </style>
