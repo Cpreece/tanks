@@ -57,6 +57,7 @@ onBeforeMount(() => {
         </tbody>
       </table>
     </div>
+    <a href="/">Back to Game</a>
   </div>
 </template>
 
@@ -110,6 +111,9 @@ onBeforeMount(() => {
         padding: 0 3px;
       }
     }
+  }
+  a {
+    margin-top: 30px;
   }
 }
 </style>
